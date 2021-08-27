@@ -1,54 +1,68 @@
 import java.io.*;
 import java.math.*;
+import java.security.*;
 import java.text.*;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
 import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
-public class TimeConversion {
+class Result {
 
     /*
-     * Complete the timeConversion function below.
+     * Complete the 'timeConversion' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts STRING s as parameter.
      */
-    static String timeConversion(String s) {
-        /*
-         * Write your code here.
-         */
-        String lastStr = s.substring(8);
+
+    public static String timeConversion(String s) {
+    // Write your code here
+        String v = s.substring(8,10);
         
-        String timeOfParameterValue = s.substring(0,8);
-        
-        String hourValueStr = timeOfParameterValue.substring(0,2);
-        
-        int hourValue = Integer.parseInt(hourValueStr);
-        
-        String exceptHourValue = timeOfParameterValue.substring(2);
-        
-        String actualTimeValue="";
-        
-        if(lastStr.equals("AM")){
-            actualTimeValue = timeOfParameterValue;
+        if(v.equals("AM")) {
+            s = s.substring(0,8);
+            String v1 = s.substring(0,2);
+            Integer first_two = Integer.parseInt(v1);
+            if(first_two == 12) {
+                String v2 = s.substring(2,8);
+                s = "00" + v2;
+            }
         }
-        else if(lastStr.equals("PM")){
-            hourValue += 12;
-            hourValueStr = String.valueOf(hourValue);
-            actualTimeValue = hourValueStr + exceptHourValue;
-        }
-        
-        return actualTimeValue;
+        else if(v.equals("PM")) {
+            String v1 = s.substring(0,2);
+            Integer first_two = Integer.parseInt(v1);
+            
+            if (first_two == 12) {
+                s = s.substring(0,8);
+            } else {
+                String v2 = s.substring(2,8);
+                first_two = first_two + 12;
+                v1 = Integer.toString(first_two);
+                s = v1 + v2;
+            }
+        } 
+        return s;
     }
 
-    private static final Scanner scan = new Scanner(System.in);
+}
 
+public class TimeConversion {
     public static void main(String[] args) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
 
-        String s = scan.nextLine();
+        String s = bufferedReader.readLine();
 
-        String result = timeConversion(s);
+        String result = Result.timeConversion(s);
 
-        bw.write(result);
-        bw.newLine();
+        bufferedWriter.write(result);
+        bufferedWriter.newLine();
 
-        bw.close();
+        bufferedReader.close();
+        bufferedWriter.close();
     }
 }
